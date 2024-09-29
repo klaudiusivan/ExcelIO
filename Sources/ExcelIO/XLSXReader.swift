@@ -44,6 +44,18 @@ public class XLSXReader {
         return workbook
     }
     
+    public static func read<T: Decodable>(_ type: T.Type, from fileURL: URL) throws -> T {
+        // Read workbook as usual
+        let workbook = try XLSXReader.read(from: fileURL)
+        
+        // Convert workbook to a JSON-like dictionary for decoding
+        let workbookDict = workbook.toJSON()
+        
+        // Use the custom XLSXDecoder to decode the dictionary into the Decodable object
+        let decoder = XLSXDecoder(workbookDict: workbookDict)
+        return try T(from: decoder)
+    }
+    
     private static func parseSharedStrings(data: Data) throws -> [String] {
         var sharedStrings: [String] = []
         let parser = XMLParser(data: data)

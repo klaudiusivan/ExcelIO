@@ -1,6 +1,6 @@
 # ExcelIO
 
-ExcelIO is a Swift framework for reading and writing Excel `.xlsx` files. It allows developers to easily integrate Excel file manipulation into their Swift applications, with support for handling nested objects, arrays, and basic cell styling.
+ExcelIO is a Swift framework for reading and writing Excel `.xlsx` files. It allows developers to integrate Excel file manipulation into their Swift applications, with support for handling nested objects, arrays, and decoding directly into Swift models.
 
 ## Table of Contents
 
@@ -9,6 +9,7 @@ ExcelIO is a Swift framework for reading and writing Excel `.xlsx` files. It all
 - [Getting Started](#getting-started)
   - [Reading XLSX Files](#reading-xlsx-files)
   - [Writing XLSX Files](#writing-xlsx-files)
+  - [Decoding XLSX Files into Swift Models](#decoding-xlsx-files-into-swift-models)
 - [Handling Complex Data Structures](#handling-complex-data-structures)
 - [Styles and Formatting](#styles-and-formatting)
 - [API Reference](#api-reference)
@@ -17,9 +18,11 @@ ExcelIO is a Swift framework for reading and writing Excel `.xlsx` files. It all
   - [XLSXCell](#xlsxcell)
   - [XLSXReader](#xlsxreader)
   - [XLSXWriter](#xlsxwriter)
+  - [XLSXDecoder](#xlsxdecoder)
 - [Examples](#examples)
   - [Creating a Simple Workbook](#example-1-creating-a-simple-workbook)
   - [Parsing an Existing XLSX File](#example-2-parsing-an-existing-xlsx-file)
+  - [Decoding XLSX to Swift Object](#example-3-decoding-xlsx-to-swift-object)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -27,10 +30,9 @@ ExcelIO is a Swift framework for reading and writing Excel `.xlsx` files. It all
 
 - **Read XLSX Files**: Extract data from Excel files, including multiple sheets, shared strings, and cell values.
 - **Write XLSX Files**: Create Excel files with multiple sheets and cells, supporting various data types.
-- **Encode/Decode Swift Objects**: Seamlessly convert Swift objects to Excel files and vice versa.
+- **Decode XLSX Files into Swift Models**: Seamlessly decode an `.xlsx` file into Swift `Decodable` objects.
 - **Handle Nested Structures**: Manage complex data structures with nested objects and arrays.
-- **Basic Styles and Formatting**: Support for basic cell styles and date formatting.
-- **Pure Swift Implementation**: Uses native Swift libraries with `ZIPFoundation` as a dependency for handling zip archives.
+- **Pure Swift Implementation**: Uses native Swift libraries with `ZIPFoundation` for handling zip archives.
 
 ## Installation
 
@@ -43,7 +45,7 @@ You can integrate ExcelIO into your project using Swift Package Manager.
 3. Enter the **repository URL**:
 
    ```
-   https://github.com/yourusername/ExcelIO.git
+   https://github.com/klaudiusivan/ExcelIO.git
    ```
 
 4. Select the latest version and **add it to your project**.
@@ -110,6 +112,32 @@ do {
 }
 ```
 
+### Decoding XLSX Files into Swift Models
+
+ExcelIO supports decoding `.xlsx` files directly into Swift models that conform to `Decodable`.
+
+**Example with a Swift Model:**
+
+```swift
+struct Person: Decodable {
+    var name: String
+    var age: Int
+    var email: String
+}
+
+let fileURL = URL(fileURLWithPath: "/path/to/your/file.xlsx")
+
+do {
+    // Decode the XLSX file into the Person model
+    let person = try XLSXReader.read(Person.self, from: fileURL)
+    print("Name: \(person.name)")
+    print("Age: \(person.age)")
+    print("Email: \(person.email)")
+} catch {
+    print("Error decoding XLSX: \(error)")
+}
+```
+
 ## Handling Complex Data Structures
 
 ExcelIO can handle nested objects and arrays within your data models, supporting conversion between Swift objects and Excel files.
@@ -117,54 +145,23 @@ ExcelIO can handle nested objects and arrays within your data models, supporting
 **Example with Nested Structures:**
 
 ```swift
-struct Contact: Encodable {
+struct Contact: Decodable {
     var name: String
     var phone: String
     var email: String
 }
 
-struct AddressBook: Encodable {
+struct AddressBook: Decodable {
     var contacts: [Contact]
 }
 
-let contacts = [
-    Contact(name: "John Doe", phone: "123-456-7890", email: "john.doe@example.com"),
-    Contact(name: "Jane Smith", phone: "098-765-4321", email: "jane.smith@example.com")
-]
-
-let addressBook = AddressBook(contacts: contacts)
+let fileURL = URL(fileURLWithPath: "/path/to/your/addressbook.xlsx")
 
 do {
-    let fileURL = URL(fileURLWithPath: "/path/to/save/addressbook.xlsx")
-    try XLSXWriter.save(encodableObject: addressBook, to: fileURL, sheetName: "Contacts")
-    print("Address Book saved to \(fileURL.path)")
+    let addressBook = try XLSXReader.read(AddressBook.self, from: fileURL)
+    print("Contacts: \(addressBook.contacts)")
 } catch {
-    print("Error writing XLSX: \(error)")
-}
-```
-
-## Styles and Formatting
-
-ExcelIO supports basic cell styling and date formatting. Cells with date values are automatically formatted as dates in Excel.
-
-**Example with Date Formatting:**
-
-```swift
-import ExcelIO
-
-struct Event: Encodable {
-    var name: String
-    var date: Date
-}
-
-let event = Event(name: "Conference", date: Date())
-
-do {
-    let fileURL = URL(fileURLWithPath: "/path/to/save/event.xlsx")
-    try XLSXWriter.save(encodableObject: event, to: fileURL, sheetName: "Events")
-    print("Event saved to \(fileURL.path)")
-} catch {
-    print("Error writing XLSX: \(error)")
+    print("Error decoding XLSX: \(error)")
 }
 ```
 
@@ -208,6 +205,7 @@ Handles reading and parsing XLSX files.
 
 - **Methods**:
   - `read(from fileURL: URL) throws -> XLSXWorkbook`: Reads an XLSX file and returns a workbook object.
+  - `read<T: Decodable>(_ type: T.Type, from fileURL: URL) throws -> T`: Reads an XLSX file and decodes it into a `Decodable` Swift object.
 
 ### XLSXWriter
 
@@ -215,6 +213,15 @@ Handles writing data to XLSX files.
 
 - **Methods**:
   - `save(workbook: XLSXWorkbook, to fileURL: URL) throws`: Writes the workbook data to an XLSX file.
+
+### XLSXDecoder
+
+Handles decoding an XLSX workbook into a `Decodable` object.
+
+- **Initialization**:
+  - `init(workbookDict: [String: Any])`: Creates an `XLSXDecoder` with a workbook dictionary.
+- **Usage**:
+  - Decodes the workbook's data into Swift types, supporting all typical types (`String`, `Int`, `Double`, `Bool`, `Date`, `Data`, and nested containers).
 
 ## Examples
 
@@ -259,6 +266,31 @@ do {
     }
 } catch {
     print("Error reading XLSX file: \(error)")
+}
+```
+
+### Example 3
+
+: Decoding XLSX to Swift Object
+
+```swift
+import ExcelIO
+
+struct Employee: Decodable {
+    var name: String
+    var position: String
+    var salary: Double
+}
+
+let fileURL = URL(fileURLWithPath: "/path/to/your/employees.xlsx")
+
+do {
+    let employee = try XLSXReader.read(Employee.self, from: fileURL)
+    print("Name: \(employee.name)")
+    print("Position: \(employee.position)")
+    print("Salary: \(employee.salary)")
+} catch {
+    print("Error decoding XLSX: \(error)")
 }
 ```
 
