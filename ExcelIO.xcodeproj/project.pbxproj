@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F8F826B52CA92FB300840609 /* ExcelIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8F826AC2CA92FB300840609 /* ExcelIO.framework */; };
-		F8F827402CA9330200840609 /* ReadMe.md in Resources */ = {isa = PBXBuildFile; fileRef = F8F8273F2CA9330200840609 /* ReadMe.md */; };
+		F8F827402CA9330200840609 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = F8F8273F2CA9330200840609 /* README.md */; };
 		F8F827572CA9367600840609 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = F8F827562CA9367600840609 /* ZIPFoundation */; };
 /* End PBXBuildFile section */
 
@@ -26,7 +26,7 @@
 		F8F826AC2CA92FB300840609 /* ExcelIO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ExcelIO.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8F826B42CA92FB300840609 /* ExcelIOTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExcelIOTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8F826FC2CA9322200840609 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
-		F8F8273F2CA9330200840609 /* ReadMe.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ReadMe.md; sourceTree = "<group>"; };
+		F8F8273F2CA9330200840609 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -97,7 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				F8F826FC2CA9322200840609 /* Package.swift */,
-				F8F8273F2CA9330200840609 /* ReadMe.md */,
+				F8F8273F2CA9330200840609 /* README.md */,
 				F8F827012CA932ED00840609 /* Sources */,
 				F8F827322CA932F300840609 /* Tests */,
 				F8F827552CA9367600840609 /* Frameworks */,
@@ -226,7 +226,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F8F827402CA9330200840609 /* ReadMe.md in Resources */,
+				F8F827402CA9330200840609 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
