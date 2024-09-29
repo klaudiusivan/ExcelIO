@@ -11,7 +11,6 @@ public class XLSXEncoder {
     
     public init() {}
     
-    // Function to encode any encodable value into a workbook
     public func encode<T: Encodable>(_ value: T) throws -> XLSXWorkbook {
         let workbook = XLSXWorkbook()
         try encodeToWorkbook(value, into: workbook, sheetName: "Main Sheet")
@@ -23,24 +22,100 @@ public class XLSXEncoder {
         let encoder = InternalEncoder(codingPath: [], userInfo: [:])
         try value.encode(to: encoder)
         
-        // Convert the container's stored properties into a sheet
-        let sheet = createSheet(from: encoder.storage, sheetName: sheetName)
-        workbook.addSheet(sheet)
+        var mainSheetData: [String: Any] = [:]
+        
+        // Separate nested arrays/objects into their own sheets
+        for (key, nestedValue) in encoder.storage {
+            if let nestedArray = nestedValue as? [Encodable] {
+                let nestedSheet = try createSheet(fromArray: nestedArray, sheetName: key)
+                workbook.addSheet(nestedSheet)
+            } else if let nestedObject = nestedValue as? Encodable {
+                let nestedSheet = try createSheet(fromObject: nestedObject, sheetName: key)
+                workbook.addSheet(nestedSheet)
+            } else {
+                // Simple values go to the main sheet
+                mainSheetData[key] = nestedValue
+            }
+        }
+        
+        // Create the main sheet with simple properties
+        let mainSheet = createMainSheet(from: mainSheetData, sheetName: sheetName)
+        workbook.addSheet(mainSheet)
     }
     
-    // Function to create a sheet from a storage dictionary
-    private func createSheet(from storage: [String: Any], sheetName: String) -> XLSXWorksheet {
+    // Function to create the main sheet from storage
+    private func createMainSheet(from storage: [String: Any], sheetName: String) -> XLSXWorksheet {
         let sheet = XLSXWorksheet(name: sheetName)
         
-        var row = 1
-        for (index, key) in storage.keys.sorted().enumerated() {
-            // Set headers in row 1
-            let headerCell = "\(Character(UnicodeScalar(65 + index)!))\(row)"
+        // Set headers and data in rows 1 and 2
+        var columnIndex = 0
+        for (key, value) in storage {
+            let headerCell = "\(Character(UnicodeScalar(65 + columnIndex)!))1"
             sheet.setCell(at: headerCell, value: key)
             
-            // Set values in row 2
-            let valueCell = "\(Character(UnicodeScalar(65 + index)!))\(row + 1)"
-            if let value = storage[key] {
+            let valueCell = "\(Character(UnicodeScalar(65 + columnIndex)!))2"
+            sheet.setCell(at: valueCell, value: "\(value)")
+            
+            columnIndex += 1
+        }
+        
+        return sheet
+    }
+    
+    // Function to create a sheet for an array of objects
+    private func createSheet(fromArray array: [Encodable], sheetName: String) throws -> XLSXWorksheet {
+        let sheet = XLSXWorksheet(name: sheetName)
+        
+        // Assume all objects in the array are of the same type
+        guard let firstObject = array.first else { return sheet }
+        
+        // Convert first object to a dictionary to extract headers
+        let encoder = InternalEncoder(codingPath: [], userInfo: [:])
+        try firstObject.encode(to: encoder)
+        let headers = encoder.storage.keys.sorted()
+        
+        // Set headers in row 1
+        for (index, header) in headers.enumerated() {
+            let headerCell = "\(Character(UnicodeScalar(65 + index)!))1"
+            sheet.setCell(at: headerCell, value: header)
+        }
+        
+        // Set values in subsequent rows
+        for (rowIndex, object) in array.enumerated() {
+            let row = rowIndex + 2 // Start at row 2
+            
+            let encoder = InternalEncoder(codingPath: [], userInfo: [:])
+            try object.encode(to: encoder)
+            
+            for (colIndex, header) in headers.enumerated() {
+                let valueCell = "\(Character(UnicodeScalar(65 + colIndex)!))\(row)"
+                if let value = encoder.storage[header] {
+                    sheet.setCell(at: valueCell, value: "\(value)")
+                }
+            }
+        }
+        
+        return sheet
+    }
+    
+    // Function to create a sheet for a nested object
+    private func createSheet(fromObject object: Encodable, sheetName: String) throws -> XLSXWorksheet {
+        let sheet = XLSXWorksheet(name: sheetName)
+        
+        let encoder = InternalEncoder(codingPath: [], userInfo: [:])
+        try object.encode(to: encoder)
+        let headers = encoder.storage.keys.sorted()
+        
+        // Set headers in row 1
+        for (index, header) in headers.enumerated() {
+            let headerCell = "\(Character(UnicodeScalar(65 + index)!))1"
+            sheet.setCell(at: headerCell, value: header)
+        }
+        
+        // Set values in row 2
+        for (colIndex, header) in headers.enumerated() {
+            let valueCell = "\(Character(UnicodeScalar(65 + colIndex)!))2"
+            if let value = encoder.storage[header] {
                 sheet.setCell(at: valueCell, value: "\(value)")
             }
         }
@@ -48,6 +123,7 @@ public class XLSXEncoder {
         return sheet
     }
 }
+
 
 // Internal Encoder
 fileprivate class InternalEncoder: Encoder {
