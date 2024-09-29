@@ -1,6 +1,6 @@
-# SwiftXLSX
+# ExcelIO
 
-SwiftXLSX is a Swift framework for reading and writing Excel XLSX files. It allows developers to integrate Excel file manipulation into their Swift applications easily, with support for handling nested objects, arrays, and basic cell styling.
+ExcelIO is a Swift framework for reading and writing Excel XLSX files. It allows developers to integrate Excel file manipulation into their Swift applications easily, with support for handling nested objects, arrays, and basic cell styling.
 
 ## Table of Contents
 
@@ -34,7 +34,7 @@ SwiftXLSX is a Swift framework for reading and writing Excel XLSX files. It allo
 
 ### Swift Package Manager
 
-SwiftXLSX can be added to your project using Swift Package Manager.
+ExcelIO can be added to your project using Swift Package Manager.
 
 1. **Open your project in Xcode**.
 2. Go to **`File > Swift Packages > Add Package Dependency...`**.
@@ -48,14 +48,14 @@ SwiftXLSX can be added to your project using Swift Package Manager.
 
 ## Getting Started
 
-This section provides an overview of the basic usage of SwiftXLSX for reading and writing Excel files.
+This section provides an overview of the basic usage of ExcelIO for reading and writing Excel files.
 
 ### Reading XLSX Files
 
 To read an XLSX file and convert it to JSON:
 
 ```swift
-import SwiftXLSX
+import ExcelIO
 
 do {
     let fileURL = URL(fileURLWithPath: "/path/to/your/file.xlsx")
@@ -76,7 +76,7 @@ do {
 You can write any `Encodable` Swift object to an XLSX file:
 
 ```swift
-import SwiftXLSX
+import ExcelIO
 
 struct Person: Encodable {
     var name: String
@@ -113,7 +113,7 @@ do {
 
 ## Handling Complex Data Structures
 
-SwiftXLSX can handle nested objects and arrays within your data models.
+ExcelIO can handle nested objects and arrays within your data models.
 
 **Example with Nested Structures:**
 
@@ -154,7 +154,7 @@ do {
 
 ## Styles and Formatting
 
-SwiftXLSX supports basic cell styling and date formatting.
+ExcelIO supports basic cell styling and date formatting.
 
 **Example with Dates:**
 
@@ -258,7 +258,7 @@ do {
 
 ## Contributing
 
-Contributions are welcome! If you'd like to contribute to **SwiftXLSX**, please follow these steps:
+Contributions are welcome! If you'd like to contribute to **ExcelIO**, please follow these steps:
 
 1. **Fork the repository** on GitHub.
 2. **Create a new branch** for your feature or bug fix.
@@ -268,4 +268,4 @@ Contributions are welcome! If you'd like to contribute to **SwiftXLSX**, please 
 
 ## License
 
-SwiftXLSX is released under the MIT License.
+ExcelIO is released under the MIT License.
