@@ -16,4 +16,12 @@ public class XLSXWorkbook {
     public func addSheet(_ sheet: XLSXWorksheet) {
         sheets.append(sheet)
     }
+    
+    public func toJSON() -> [String: Any] {
+        var workbookDict: [String: Any] = [:]
+        for sheet in sheets {
+            workbookDict[sheet.name] = sheet.toJSON()
+        }
+        return workbookDict
+    }
 }
