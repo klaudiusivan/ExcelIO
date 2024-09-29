@@ -30,26 +30,34 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		F89581A02CA94B0600BF1DAF /* Exceptions for "Tests" folder in "ExcelIO" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ExcelIOTests/CellOperationsTests.swift,
+				ExcelIOTests/EncodingTests.swift,
+				ExcelIOTests/FileIOTests.swift,
+				ExcelIOTests/SharedStringsTests.swift,
+				ExcelIOTests/WorkbookTests.swift,
+			);
+			target = F8F826AB2CA92FB300840609 /* ExcelIO */;
+		};
+		F89581A12CA94B0600BF1DAF /* Exceptions for "Tests" folder in "ExcelIOTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ExcelIOTests/CellOperationsTests.swift,
+				ExcelIOTests/EncodingTests.swift,
+				ExcelIOTests/FileIOTests.swift,
+				ExcelIOTests/SharedStringsTests.swift,
+				ExcelIOTests/WorkbookTests.swift,
+			);
+			target = F8F826B32CA92FB300840609 /* ExcelIOTests */;
+		};
 		F8F827202CA932ED00840609 /* Exceptions for "Sources" folder in "ExcelIO" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			publicHeaders = (
 				ExcelIO/ExcelIO.h,
 			);
 			target = F8F826AB2CA92FB300840609 /* ExcelIO */;
-		};
-		F8F827392CA932F300840609 /* Exceptions for "Tests" folder in "ExcelIO" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				ExcelIOTests/ExcelIOTests.swift,
-			);
-			target = F8F826AB2CA92FB300840609 /* ExcelIO */;
-		};
-		F8F8273A2CA932F300840609 /* Exceptions for "Tests" folder in "ExcelIOTests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				ExcelIOTests/ExcelIOTests.swift,
-			);
-			target = F8F826B32CA92FB300840609 /* ExcelIOTests */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -65,8 +73,8 @@
 		F8F827322CA932F300840609 /* Tests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				F8F827392CA932F300840609 /* Exceptions for "Tests" folder in "ExcelIO" target */,
-				F8F8273A2CA932F300840609 /* Exceptions for "Tests" folder in "ExcelIOTests" target */,
+				F89581A02CA94B0600BF1DAF /* Exceptions for "Tests" folder in "ExcelIO" target */,
+				F89581A12CA94B0600BF1DAF /* Exceptions for "Tests" folder in "ExcelIOTests" target */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
